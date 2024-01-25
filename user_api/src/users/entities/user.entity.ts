@@ -1,25 +1,30 @@
-import { Column, Entity, PrimaryGeneratedColumn, BeforeInsert } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, BeforeInsert } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @ApiProperty()
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    name: string;
+  @ApiProperty()
+  @Column()
+  name: string;
 
-    @Column({"unique": true})
-    email: string;
+  @ApiProperty()
+  @Column({ unique: true })
+  email: string;
 
-    @Exclude()
-    @Column()
-    password: string;
+  @ApiProperty({ writeOnly: true })
+  @Exclude()
+  @Column()
+  password: string;
 
-    @BeforeInsert()
-    async hashPassword() {
-        const salt = await bcrypt.genSalt();
-        this.password = await bcrypt.hash(this.password, salt)
-    }
+  @BeforeInsert()
+  async hashPassword() {
+    const salt = await bcrypt.genSalt();
+    this.password = await bcrypt.hash(this.password, salt);
+  }
 }
